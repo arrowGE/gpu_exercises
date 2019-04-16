@@ -1,0 +1,24 @@
+CC = gcc 
+CFLAGS = -DVTGRAPE 
+CFLAGS += -O -fopenmp -ffast-math -funroll-loops 
+
+GL_INCDIR = /usr/local/include/GL
+GL_LIBDIR = /usr/local/lib
+GL_LIBS = -L$(GL_LIBDIR) -lglut -lGL -lGLU
+LIB = $(GL_LIBS) -lm
+
+TARGET = cras_gpu
+
+all: $(TARGET)
+
+cras_gpu : cras36.c mr3_host.o
+	$(CC) $(CFLAGS) -I$(GL_INCDIR) $? -o $@ $(LIB) 
+
+mr3_host.o : mr3_host.c
+	$(CC) $(CFLAGS) -c $<
+
+sockhelp.o : sockhelp.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+clean:
+	-rm *.o $(TARGET)
