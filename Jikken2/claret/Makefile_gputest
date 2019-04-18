@@ -6,8 +6,14 @@ CUDA_INSTALL_PATH = /usr/local/cuda
 CUDA_SDK_PATH     = /home/staff/jed/narumi/NVIDIA_GPU_Computing_SDK/C
 MDGRAPE_LIB += -L$(CUDA_INSTALL_PATH)/lib64 -lcuda -lcudart
 GL_LIBDIR = /usr/lib64
+
 #GL_INCDIR = /usr/local/cuda/NVIDIA_GPU_Computing_SDK/shared/inc
 GL_INCDIR = /usr/local/include/GL
+#GL_INCDIR = /usr/include/GL
+
+#GL_INCDIR = /usr/local/include/GL
+#GL_LIBDIR = /usr/local/lib
+
 GL_LIBS = -L$(GL_LIBDIR) -lglut -lGL -lGLU
 LIB = $(MDGRAPE_LIB) $(GL_LIBS) -lm
 
@@ -15,7 +21,7 @@ NVCC       = $(CUDA_INSTALL_PATH)/bin/nvcc
 NVCC_FLAGS = --compile
 NVCC_FLAGS += -use_fast_math
 #NVCC_FLAGS += -deviceemu
-NVCC_FLAGS += -O
+NVCC_FLAGS += -O1 #最適化レベルを指定しないとエラー
 CUDAINCLUDES  = -I. -I$(CUDA_INSTALL_PATH)/include
 
 TARGET = cras_gpu
