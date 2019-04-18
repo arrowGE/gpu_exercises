@@ -11,9 +11,6 @@ GL_LIBDIR = /usr/lib64
 GL_INCDIR = /usr/local/include/GL
 #GL_INCDIR = /usr/include/GL
 
-#GL_INCDIR = /usr/local/include/GL
-#GL_LIBDIR = /usr/local/lib
-
 GL_LIBS = -L$(GL_LIBDIR) -lglut -lGL -lGLU
 LIB = $(MDGRAPE_LIB) $(GL_LIBS) -lm
 
