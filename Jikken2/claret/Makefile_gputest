@@ -16,7 +16,7 @@ NVCC_FLAGS = --compile
 NVCC_FLAGS += -use_fast_math
 #NVCC_FLAGS += -deviceemu
 NVCC_FLAGS += -O
-CUDAINCLUDES  = -I. -I$(CUDA_INSTALL_PATH)/include 
+CUDAINCLUDES  = -I. -I$(CUDA_INSTALL_PATH)/include
 
 TARGET = cras_gpu
 
