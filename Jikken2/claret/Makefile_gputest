@@ -18,7 +18,7 @@ NVCC       = $(CUDA_INSTALL_PATH)/bin/nvcc
 NVCC_FLAGS = --compile
 NVCC_FLAGS += -use_fast_math
 #NVCC_FLAGS += -deviceemu
-NVCC_FLAGS += -O1 #最適化レベルを指定しないとエラー
+NVCC_FLAGS += -O #最適化レベルを指定しないとエラー
 CUDAINCLUDES  = -I. -I$(CUDA_INSTALL_PATH)/include
 
 TARGET = cras_gpu
