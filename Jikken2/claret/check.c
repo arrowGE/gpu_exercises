@@ -112,7 +112,7 @@ void MR3calcnacl_CPU(double x[], int n, int atype[], int nat,
 
 int main(int argc, char **argv)
 {
-  InitExp();
+  InitExp();//高速化したExpを使うための準備
   int i, j, n, nstep = 1, nat = 2;
   double *x, *a1, *a2;
   double *pol, *sigm, *ipotro, *pc, *pd, *zz;
