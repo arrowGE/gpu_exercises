@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <sys/time.h>
-#include <values.h>
+
+//#include "fastexpf.c"
 
 #include <values.h>
 
@@ -39,8 +40,7 @@ void InitExp()
   log(FLT_MAX) = 88.7 then return FLT_MAX if floor(x) >= 89
 */
 
-
-__inline__ float Exp(float x)
+static __inline__ float Exp(float x) //staticつけとかないとエラー cedだとつけなくても通る？
 {
 #if 1
   int isPositive = 0;
