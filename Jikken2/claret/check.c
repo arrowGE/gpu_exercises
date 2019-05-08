@@ -212,7 +212,6 @@ int main(int argc, char **argv)
   }
 
   
-
   // set number of particles
   sscanf(argv[1], "%d", &n);
   printf("Number of particle is %d\n", n);

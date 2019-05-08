@@ -33,28 +33,32 @@ void nacl_kernel(float *x, int n, int *atype, int nat, float *pol, float *sigm, 
   if((periodicflag & 1)==0) xmax *= 2.0f;
   xmax1 = 1.0f / xmax;
   i = blockIdx.x * 64 + threadIdx.x;
-  if(i<n){
+  if(i<n)
+  {
     for(k=0; k<3; k++) fi[k] = 0.0f;
-    for(j=0; j<n; j++){
+    for(j=0; j<n; j++)
+    {
       dn2 = 0.0f;
-      for(k=0; k<3; k++){
-	dr[k] =  x[i*3+k] - x[j*3+k];
-	dr[k] -= rintf(dr[k] * xmax1) * xmax;
-	dn2   += dr[k] * dr[k];
+      for(k=0; k<3; k++)
+      {
+	      dr[k] =  x[i*3+k] - x[j*3+k];
+	      dr[k] -= rintf(dr[k] * xmax1) * xmax;
+	      dn2   += dr[k] * dr[k];
       }
-      if(dn2 != 0.0f){
-	r     = sqrtf(dn2);
-	inr   = 1.0f  / r;
-	inr2  = inr  * inr;
-	inr4  = inr2 * inr2;
-	inr8  = inr4 * inr4;
-	t     = atype[i] * nat + atype[j];
-	d3    = pb * pol[t] * exp( (sigm[t] - r) * ipotro[t]);
-	dphir = ( d3 * ipotro[t] * inr
-		  - 6.0f * pc[t] * inr8
-		  - 8.0f * pd[t] * inr8 * inr2
-		  + inr2 * inr * zz[t] );
-	for(k=0; k<3; k++) fi[k] += dphir * dr[k];
+      if(dn2 != 0.0f)
+      {
+	      r     = sqrtf(dn2);
+	      inr   = 1.0f  / r;
+	      inr2  = inr  * inr;
+	      inr4  = inr2 * inr2;
+	      inr8  = inr4 * inr4;
+	      t     = atype[i] * nat + atype[j];
+	      d3    = pb * pol[t] * exp( (sigm[t] - r) * ipotro[t]);
+	      dphir = ( d3 * ipotro[t] * inr
+		        - 6.0f * pc[t] * inr8
+		        - 8.0f * pd[t] * inr8 * inr2
+		        + inr2 * inr * zz[t] );
+	      for(k=0; k<3; k++) fi[k] += dphir * dr[k];
       }
     }
     for(k=0; k<3; k++) force[i*3+k] = fi[k];
@@ -72,7 +76,8 @@ void MR3calcnacl(double x[], int n, int atype[], int nat,
   float *d_x,*d_pol,*d_sigm,*d_ipotro,*d_pc,*d_pd,*d_zz,*d_force,xmaxf=xmax;
 
   // ensure force has enough size for temporary array
-  if(sizeof(double)*n*3<sizeof(float)*nat*nat){
+  if(sizeof(double)*n*3<sizeof(float)*nat*nat)
+  {
     fprintf(stderr,"** error : n*3<nat*nat **\n");
     exit(1);
   }
