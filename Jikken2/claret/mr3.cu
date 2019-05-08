@@ -26,6 +26,84 @@ void nacl_kernel(float *x, int n, int *atype, int nat, float *pol, float *sigm, 
 		 float *pc, float *pd, float *zz, int tblno, float xmax, int periodicflag, 
 		 float *force)
 {
+  /*
+  x 原子の座標
+  n 粒子数
+  atype ある粒子の原子種類 0=Na 1=Cl
+  nat 原子の種類の数 2
+  pol,sigmo,iporto,pc,pd,zz nat*natの大きさを持つ配列 Na-Na=0 Na-Cl or Cl-Na = 1 or 2 Cl-Cl=3
+  tblno 未使用
+  xmax 周期的境界条件におけるセルの大きさ
+  periodicflag 周期境界条件の時は1、それ以外は0 デフォルトでは0
+  force force[i*3+0~2]で粒子iに働く力の大きさのx~z成分
+  */
+
+  int i,j,k,t;
+  float xmax1,dn2,r,inr,inr2,inr4,inr8,d3,dr[3],fi[3];
+  float pb=(float)(0.338e-19/(14.39*1.60219e-19)),dphir; 
+
+  int js;
+  __shared__ float s_xj[64*3];
+  __shared__ int s_atypej[64];
+  int tid = threadIdx.x;
+  
+
+  if((periodicflag & 1)==0) xmax *= 2.0f;
+  xmax1 = 1.0f / xmax;//xmax1 = xmaxの逆数
+
+  i = blockIdx.x * 64 + threadIdx.x;//スレッド番号取得
+
+  if(i<n)
+  {
+    for(k=0; k<3; k++) fi[k] = 0.0f;
+
+    for(j=0; j<n; j+=64)
+    {
+      __syncthreads();
+      s_xj[tid*3+0] = x[(j+tid)*3+0];
+      s_xj[tid*3+1] = x[(j+tid)*3+1];
+      s_xj[tid*3+2] = x[(j+tid)*3+2];
+      s_atypej[tid] = atype[j+tid];
+      __syncthreads();
+      for(js=0;js<64;js++)
+      {
+        dn2 = 0.0f;
+        for(k=0; k<3; k++)
+        {
+          dr[k] =  x[i*3+k] - s_xj[js*3+k];
+          dr[k] -= rintf(dr[k] * xmax1) * xmax;
+          dn2   += dr[k] * dr[k];
+        }
+        if(dn2 != 0.0f)
+        {
+          r     = sqrtf(dn2);
+          inr   = 1.0f  / r;
+          inr2  = inr  * inr;
+          inr4  = inr2 * inr2;
+          inr8  = inr4 * inr4;
+          
+          t     = atype[i] * nat + s_atypej[js];//分子の組み合わせを判定 Na-Na=0 Na-Cl or Cl-Na = 1 or 2 Cl-Cl=3
+          
+          d3    = pb * pol[t] * exp( (sigm[t] - r) * ipotro[t]);
+          
+          dphir = ( d3 * ipotro[t] * inr
+              - 6.0f * pc[t] * inr8
+              - 8.0f * pd[t] * inr8 * inr2
+              + inr2 * inr * zz[t] );
+              
+          for(k=0; k<3; k++) fi[k] += dphir * dr[k];
+        }
+      }
+    }
+    for(k=0; k<3; k++) force[i*3+k] = fi[k];
+  }
+}
+
+extern "C" __global__ 
+void nacl_kernel_original(float *x, int n, int *atype, int nat, float *pol, float *sigm, float *ipotro,
+		 float *pc, float *pd, float *zz, int tblno, float xmax, int periodicflag, 
+		 float *force)
+{
   int i,j,k,t;
   float xmax1,dn2,r,inr,inr2,inr4,inr8,d3,dr[3],fi[3];
   float pb=(float)(0.338e-19/(14.39*1.60219e-19)),dphir; 
