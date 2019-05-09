@@ -86,10 +86,82 @@ void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//デ�
     s_xj[tid] = x[j+tid];//シェアードメモリを使用
     __syncthreads();
 
-    for(js = 0; js < nj; js++)
+    /*for(js = 0; js < nj; js++)
     {
       inter(s_xj[js].r, xi, fi, atypei + s_xj[js].atype, xmax, xmax1);
-    }  
+    }*/ 
+    
+    //ループアンローリング
+    inter(s_xj[0].r, xi, fi, atypei + s_xj[0].atype, xmax, xmax1);
+    inter(s_xj[1].r, xi, fi, atypei + s_xj[1].atype, xmax, xmax1);
+    inter(s_xj[2].r, xi, fi, atypei + s_xj[2].atype, xmax, xmax1);
+    inter(s_xj[3].r, xi, fi, atypei + s_xj[3].atype, xmax, xmax1);
+    inter(s_xj[4].r, xi, fi, atypei + s_xj[4].atype, xmax, xmax1);
+    inter(s_xj[5].r, xi, fi, atypei + s_xj[5].atype, xmax, xmax1);
+    inter(s_xj[6].r, xi, fi, atypei + s_xj[6].atype, xmax, xmax1);
+    inter(s_xj[7].r, xi, fi, atypei + s_xj[7].atype, xmax, xmax1);
+    inter(s_xj[8].r, xi, fi, atypei + s_xj[8].atype, xmax, xmax1);
+    inter(s_xj[9].r, xi, fi, atypei + s_xj[9].atype, xmax, xmax1);
+
+    inter(s_xj[10].r, xi, fi, atypei + s_xj[10].atype, xmax, xmax1);
+    inter(s_xj[11].r, xi, fi, atypei + s_xj[11].atype, xmax, xmax1);
+    inter(s_xj[12].r, xi, fi, atypei + s_xj[12].atype, xmax, xmax1);
+    inter(s_xj[13].r, xi, fi, atypei + s_xj[13].atype, xmax, xmax1);
+    inter(s_xj[14].r, xi, fi, atypei + s_xj[14].atype, xmax, xmax1);
+    inter(s_xj[15].r, xi, fi, atypei + s_xj[15].atype, xmax, xmax1);
+    inter(s_xj[16].r, xi, fi, atypei + s_xj[16].atype, xmax, xmax1);
+    inter(s_xj[17].r, xi, fi, atypei + s_xj[17].atype, xmax, xmax1);
+    inter(s_xj[18].r, xi, fi, atypei + s_xj[18].atype, xmax, xmax1);
+    inter(s_xj[19].r, xi, fi, atypei + s_xj[19].atype, xmax, xmax1);
+
+    inter(s_xj[20].r, xi, fi, atypei + s_xj[20].atype, xmax, xmax1);
+    inter(s_xj[21].r, xi, fi, atypei + s_xj[21].atype, xmax, xmax1);
+    inter(s_xj[22].r, xi, fi, atypei + s_xj[22].atype, xmax, xmax1);
+    inter(s_xj[23].r, xi, fi, atypei + s_xj[23].atype, xmax, xmax1);
+    inter(s_xj[24].r, xi, fi, atypei + s_xj[24].atype, xmax, xmax1);
+    inter(s_xj[25].r, xi, fi, atypei + s_xj[25].atype, xmax, xmax1);
+    inter(s_xj[26].r, xi, fi, atypei + s_xj[26].atype, xmax, xmax1);
+    inter(s_xj[27].r, xi, fi, atypei + s_xj[27].atype, xmax, xmax1);
+    inter(s_xj[28].r, xi, fi, atypei + s_xj[28].atype, xmax, xmax1);
+    inter(s_xj[29].r, xi, fi, atypei + s_xj[29].atype, xmax, xmax1);
+    
+    inter(s_xj[30].r, xi, fi, atypei + s_xj[30].atype, xmax, xmax1);
+    inter(s_xj[31].r, xi, fi, atypei + s_xj[31].atype, xmax, xmax1);
+    inter(s_xj[32].r, xi, fi, atypei + s_xj[32].atype, xmax, xmax1);
+    inter(s_xj[33].r, xi, fi, atypei + s_xj[33].atype, xmax, xmax1);
+    inter(s_xj[34].r, xi, fi, atypei + s_xj[34].atype, xmax, xmax1);
+    inter(s_xj[35].r, xi, fi, atypei + s_xj[35].atype, xmax, xmax1);
+    inter(s_xj[36].r, xi, fi, atypei + s_xj[36].atype, xmax, xmax1);
+    inter(s_xj[37].r, xi, fi, atypei + s_xj[37].atype, xmax, xmax1);
+    inter(s_xj[38].r, xi, fi, atypei + s_xj[38].atype, xmax, xmax1);
+    inter(s_xj[39].r, xi, fi, atypei + s_xj[39].atype, xmax, xmax1);
+
+    inter(s_xj[40].r, xi, fi, atypei + s_xj[40].atype, xmax, xmax1);
+    inter(s_xj[41].r, xi, fi, atypei + s_xj[41].atype, xmax, xmax1);
+    inter(s_xj[42].r, xi, fi, atypei + s_xj[42].atype, xmax, xmax1);
+    inter(s_xj[43].r, xi, fi, atypei + s_xj[43].atype, xmax, xmax1);
+    inter(s_xj[44].r, xi, fi, atypei + s_xj[44].atype, xmax, xmax1);
+    inter(s_xj[45].r, xi, fi, atypei + s_xj[45].atype, xmax, xmax1);
+    inter(s_xj[46].r, xi, fi, atypei + s_xj[46].atype, xmax, xmax1);
+    inter(s_xj[47].r, xi, fi, atypei + s_xj[47].atype, xmax, xmax1);
+    inter(s_xj[48].r, xi, fi, atypei + s_xj[48].atype, xmax, xmax1);
+    inter(s_xj[49].r, xi, fi, atypei + s_xj[49].atype, xmax, xmax1);
+
+    inter(s_xj[50].r, xi, fi, atypei + s_xj[50].atype, xmax, xmax1);
+    inter(s_xj[51].r, xi, fi, atypei + s_xj[51].atype, xmax, xmax1);
+    inter(s_xj[52].r, xi, fi, atypei + s_xj[52].atype, xmax, xmax1);
+    inter(s_xj[53].r, xi, fi, atypei + s_xj[53].atype, xmax, xmax1);
+    inter(s_xj[54].r, xi, fi, atypei + s_xj[54].atype, xmax, xmax1);
+    inter(s_xj[55].r, xi, fi, atypei + s_xj[55].atype, xmax, xmax1);
+    inter(s_xj[56].r, xi, fi, atypei + s_xj[56].atype, xmax, xmax1);
+    inter(s_xj[57].r, xi, fi, atypei + s_xj[57].atype, xmax, xmax1);
+    inter(s_xj[58].r, xi, fi, atypei + s_xj[58].atype, xmax, xmax1);
+    inter(s_xj[59].r, xi, fi, atypei + s_xj[59].atype, xmax, xmax1);
+
+    inter(s_xj[60].r, xi, fi, atypei + s_xj[60].atype, xmax, xmax1);
+    inter(s_xj[61].r, xi, fi, atypei + s_xj[61].atype, xmax, xmax1);
+    inter(s_xj[62].r, xi, fi, atypei + s_xj[62].atype, xmax, xmax1);
+    inter(s_xj[63].r, xi, fi, atypei + s_xj[63].atype, xmax, xmax1);
   }
 
   if(i<n) for(k=0; k<3; k++) fvec[i*3+k] = fi[k];
