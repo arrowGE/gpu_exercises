@@ -92,13 +92,13 @@ void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//デ�
     s_xj[tid] = x[j+tid];//シェアードメモリを使用
     __syncthreads();
 
-    /*for(js = 0; js < nj; js++)
+    for(js = 0; js < nj; js++)
     {
       inter(s_xj[js].r, xi, fi, atypei + s_xj[js].atype, xmax, xmax1);
-    }*/ 
+    }
     
     //ループアンローリング
-    inter(s_xj[0].r, xi, fi, atypei + s_xj[0].atype, xmax, xmax1);
+    /*inter(s_xj[0].r, xi, fi, atypei + s_xj[0].atype, xmax, xmax1);
     inter(s_xj[1].r, xi, fi, atypei + s_xj[1].atype, xmax, xmax1);
     inter(s_xj[2].r, xi, fi, atypei + s_xj[2].atype, xmax, xmax1);
     inter(s_xj[3].r, xi, fi, atypei + s_xj[3].atype, xmax, xmax1);
@@ -167,7 +167,7 @@ void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//デ�
     inter(s_xj[60].r, xi, fi, atypei + s_xj[60].atype, xmax, xmax1);
     inter(s_xj[61].r, xi, fi, atypei + s_xj[61].atype, xmax, xmax1);
     inter(s_xj[62].r, xi, fi, atypei + s_xj[62].atype, xmax, xmax1);
-    inter(s_xj[63].r, xi, fi, atypei + s_xj[63].atype, xmax, xmax1);
+    inter(s_xj[63].r, xi, fi, atypei + s_xj[63].atype, xmax, xmax1);*/
   }
 
   if(i<n) for(k=0; k<3; k++) fvec[i*3+k] = fi[k];
