@@ -28,8 +28,7 @@ typedef struct {
 __constant__ VG_MATRIX d_matrix[sizeof(VG_MATRIX)*2*2];
 
 __device__ __inline__ 
-void inter(float xj[3], float xi[3], float fi[3], 
-  int t, float xmax, float xmax1)//VG_MATRIX *d_matrix, int t, float xmax, float xmax1)
+void inter(float xj[3], float xi[3], float fi[3], int t, float xmax, float xmax1)//デバイス側計算部//VG_MATRIX *d_matrix, int t, float xmax, float xmax1)
 {
   int k;
   float dn2,r,inr,inr2,inr4,inr8,d3,dr[3];
@@ -59,11 +58,11 @@ void inter(float xj[3], float xi[3], float fi[3],
 }
 
 extern "C" __global__ 
-void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//VG_MATRIX *d_matrix, float xmax, float *fvec)
+void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//デバイス側メイン//VG_MATRIX *d_matrix, float xmax, float *fvec)
 {
   int tid = threadIdx.x;
   int i = blockIdx.x * NTHRE + tid;
-  int j,k;
+  int j,k,js,nj;
   float fi[3],xmax1=1.0f/xmax;
   int atypei;
   float xi[3];
@@ -72,10 +71,29 @@ void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//VG_MA
   for(k=0; k<3; k++) fi[k] = 0.0f;
   for(k=0; k<3; k++) xi[k] = x[i].r[k];
   atypei = x[i].atype * nat;
-  for (j = 0; j < n; j++){
-    inter(x[j].r, xi, fi, atypei + x[j].atype, xmax, xmax1);
+
+  for (j = 0; j < n; j+=NTHRE)
+  {
+    if(j + NTHRE > n)//nがNTHREの倍数以外なら差分だけ計算する
+    {
+      nj = n - j;
+    }
+    else
+    {
+      nj = NTHRE;
+    }
+    __syncthreads();
+    s_xj[tid] = x[j+tid];//シェアードメモリを使用
+    __syncthreads();
+
+    for(js = 0; js < nj; js++)
+    {
+      inter(s_xj[js].r, xi, fi, atypei + s_xj[js].atype, xmax, xmax1);
+    }  
   }
+
   if(i<n) for(k=0; k<3; k++) fvec[i*3+k] = fi[k];
+  
 }
 
 
