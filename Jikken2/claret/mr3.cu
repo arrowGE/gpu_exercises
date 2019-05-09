@@ -41,20 +41,26 @@ void inter(float xj[3], float xi[3], float fi[3], int t, float xmax, float xmax1
     dr[k] -= rintf(dr[k] * xmax1) * xmax;
     dn2   += dr[k] * dr[k];
   }
-  if(dn2 != 0.0f)
+  
+  r     = sqrtf(dn2);
+  inr   = 1.0f / r;    
+  inr2  = inr  * inr;
+  inr4  = inr2 *inr2;
+  inr8  = inr4 * inr4;
+  d3    = pb * d_matrix[t].pol * expf( (d_matrix[t].sigm - r) * d_matrix[t].ipotro);
+
+  dphir = ( d3 * d_matrix[t].ipotro * inr
+    - 6.0f * d_matrix[t].pc * inr8
+    - 8.0f * d_matrix[t].pd * inr8 * inr2
+    + inr2 * inr * d_matrix[t].zz );
+
+  if(dn2==0.0) //if文簡略化
   {
-    r     = sqrtf(dn2);
-    inr   = 1.0f / r;
-    inr2  = inr  * inr;
-    inr4  = inr2 * inr2;
-    inr8  = inr4 * inr4;
-    d3    = pb * d_matrix[t].pol * expf( (d_matrix[t].sigm - r) * d_matrix[t].ipotro);
-    dphir = ( d3 * d_matrix[t].ipotro * inr
-	    - 6.0f * d_matrix[t].pc * inr8
-	    - 8.0f * d_matrix[t].pd * inr8 * inr2
-	    + inr2 * inr * d_matrix[t].zz );
-    for(k=0; k<3; k++) fi[k] += dphir * dr[k];
+    dphir=0.0;
   }
+
+  for(k=0; k<3; k++) fi[k] += dphir * dr[k];
+  
 }
 
 extern "C" __global__ 
