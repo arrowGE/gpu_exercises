@@ -207,16 +207,17 @@ int main(int argc, char **argv)
     }
   }
   get_cputime(&ltime,&stime);//計測終了
+  printf("total time  = %f [s]\n",stime);
   stime = stime / (double)nstep;//nstepで割って1回分の計算時間を求める
   
   double temp=(double)n;
   switch(argv[2][0]){//計算速度を出力
   case '0':
-    //printf("CPU calculation time  = %f [s]\n",stime);
+    printf("CPU calculation time  = %f [s]\n",stime);
     printf("CPU calculation speed = %f [Gflops]\n",temp*temp*78/stime/1e9);
     break;
   case '1':
-    //printf("GPU calculation time  = %f [s]\n",stime);
+    printf("GPU calculation time  = %f [s]\n",stime);
     printf("GPU calculation speed = %f [Gflops]\n",temp*temp*78/stime/1e9);
     break;
   default:
@@ -254,7 +255,6 @@ int main(int argc, char **argv)
   eavr = eavr / (double)n;
 
   printf("GPU calculation error = %e\n",eavr);
-
 
   // deallocate variables
   free(x);
