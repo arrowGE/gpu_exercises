@@ -54,7 +54,7 @@ void MR3calcnacl_correct(double x[], int n, int atype[], int nat,
         inr4 = inr2 * inr2;
         inr8 = inr4 * inr4;
         t = atype[i] * nat + atype[j];
-        d3 = pb * pol[t] * exp((sigm[t] - r) * ipotro[t]);
+        d3 = pb * pol[t] * expf((sigm[t] - r) * ipotro[t]);
         dphir = (d3 * ipotro[t] * inr - 6.0 * pc[t] * inr8 - 8.0 * pd[t] * inr8 * inr2 + inr2 * inr * zz[t]);
         for (k = 0; k < 3; k++)
           fi[k] += dphir * dr[k];
@@ -265,12 +265,12 @@ int main(int argc, char **argv)
     switch (argv[2][0])
     {
     case '0':
-      MR3calcnacl_correct(x, n, atype, nat, pol, sigm, ipotro, pc, pd, zz, 0, xmax, 1, a2);
+      MR3calcnacl_correct(x, n, atype, nat, pol, sigm, ipotro, pc, pd, zz, 0, xmax, 1, a1);
       if (i == 0)
         printf("CPU original routine is used\n");
       break;
     case '1':
-      MR3calcnacl(x, n, atype, nat, pol, sigm, ipotro, pc, pd, zz, 0, xmax, 1, a2);
+      MR3calcnacl(x, n, atype, nat, pol, sigm, ipotro, pc, pd, zz, 0, xmax, 1, a1);
       if (i == 0)
         printf("GPU routine is used\n");
       break;
@@ -329,10 +329,9 @@ int main(int argc, char **argv)
     eavr += eisize;
   }
   eavr = eavr / (double)n;
-  if (argv[2][0] == '1')
-  {
-    printf("GPU calculation error = %e\n", eavr);
-  }
+  
+  printf("GPU calculation error = %e\n", eavr);
+  
   // deallocate variables
   free(x);
   free(a1);

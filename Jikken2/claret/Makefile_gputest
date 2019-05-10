@@ -1,6 +1,6 @@
 CC = gcc 
 CFLAGS = -DVTGRAPE 
-CFLAGS += -O -ffast-math -funroll-loops 
+CFLAGS += -O 
 MDGRAPE_LIB = mr3.o
 CUDA_INSTALL_PATH = /usr/local/cuda
 CUDA_SDK_PATH     = /home/staff/jed/narumi/NVIDIA_GPU_Computing_SDK/C
