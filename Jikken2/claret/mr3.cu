@@ -80,14 +80,14 @@ void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//デ�
 
   for (j = 0; j < n; j+=NTHRE)
   {
-    if(j + NTHRE > n)//nがNTHREの倍数以外なら差分だけ計算する
+    /*if(j + NTHRE > n)//nがNTHREの倍数以外なら差分だけ計算する
     {
       nj = n - j;
     }
     else
     {
       nj = NTHRE;
-    }
+    }*/
     __syncthreads();
     s_xj[tid] = x[j+tid];//シェアードメモリを使用
     __syncthreads();
