@@ -7,7 +7,7 @@
 #define CUT_CHECK_ERROR(x) ;
 
 #define NMAX      8192
-#define NTHRE       64  
+#define NTHRE       64 
 #define ATYPE        8
 #define ATYPE2    (ATYPE * ATYPE)
 
@@ -162,6 +162,79 @@ void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//ãƒ‡ãƒ
     inter(s_xj[61].r, xi, fi, atypei + s_xj[61].atype, xmax, xmax1);
     inter(s_xj[62].r, xi, fi, atypei + s_xj[62].atype, xmax, xmax1);
     inter(s_xj[63].r, xi, fi, atypei + s_xj[63].atype, xmax, xmax1);
+    /*inter(s_xj[64].r, xi, fi, atypei + s_xj[64].atype, xmax, xmax1);
+    inter(s_xj[65].r, xi, fi, atypei + s_xj[65].atype, xmax, xmax1);
+    inter(s_xj[66].r, xi, fi, atypei + s_xj[66].atype, xmax, xmax1);
+    inter(s_xj[67].r, xi, fi, atypei + s_xj[67].atype, xmax, xmax1);
+    inter(s_xj[68].r, xi, fi, atypei + s_xj[68].atype, xmax, xmax1);
+    inter(s_xj[69].r, xi, fi, atypei + s_xj[69].atype, xmax, xmax1);
+
+    inter(s_xj[70].r, xi, fi, atypei + s_xj[70].atype, xmax, xmax1);
+    inter(s_xj[71].r, xi, fi, atypei + s_xj[71].atype, xmax, xmax1);
+    inter(s_xj[72].r, xi, fi, atypei + s_xj[72].atype, xmax, xmax1);
+    inter(s_xj[73].r, xi, fi, atypei + s_xj[73].atype, xmax, xmax1);
+    inter(s_xj[74].r, xi, fi, atypei + s_xj[74].atype, xmax, xmax1);
+    inter(s_xj[75].r, xi, fi, atypei + s_xj[75].atype, xmax, xmax1);
+    inter(s_xj[76].r, xi, fi, atypei + s_xj[76].atype, xmax, xmax1);
+    inter(s_xj[77].r, xi, fi, atypei + s_xj[77].atype, xmax, xmax1);
+    inter(s_xj[78].r, xi, fi, atypei + s_xj[78].atype, xmax, xmax1);
+    inter(s_xj[79].r, xi, fi, atypei + s_xj[79].atype, xmax, xmax1);
+
+    inter(s_xj[80].r, xi, fi, atypei + s_xj[80].atype, xmax, xmax1);
+    inter(s_xj[81].r, xi, fi, atypei + s_xj[81].atype, xmax, xmax1);
+    inter(s_xj[82].r, xi, fi, atypei + s_xj[82].atype, xmax, xmax1);
+    inter(s_xj[83].r, xi, fi, atypei + s_xj[83].atype, xmax, xmax1);
+    inter(s_xj[84].r, xi, fi, atypei + s_xj[84].atype, xmax, xmax1);
+    inter(s_xj[85].r, xi, fi, atypei + s_xj[85].atype, xmax, xmax1);
+    inter(s_xj[86].r, xi, fi, atypei + s_xj[86].atype, xmax, xmax1);
+    inter(s_xj[87].r, xi, fi, atypei + s_xj[87].atype, xmax, xmax1);
+    inter(s_xj[88].r, xi, fi, atypei + s_xj[88].atype, xmax, xmax1);
+    inter(s_xj[89].r, xi, fi, atypei + s_xj[89].atype, xmax, xmax1);
+
+    inter(s_xj[90].r, xi, fi, atypei + s_xj[90].atype, xmax, xmax1);
+    inter(s_xj[91].r, xi, fi, atypei + s_xj[91].atype, xmax, xmax1);
+    inter(s_xj[92].r, xi, fi, atypei + s_xj[92].atype, xmax, xmax1);
+    inter(s_xj[93].r, xi, fi, atypei + s_xj[93].atype, xmax, xmax1);
+    inter(s_xj[94].r, xi, fi, atypei + s_xj[94].atype, xmax, xmax1);
+    inter(s_xj[95].r, xi, fi, atypei + s_xj[95].atype, xmax, xmax1);
+    inter(s_xj[96].r, xi, fi, atypei + s_xj[96].atype, xmax, xmax1);
+    inter(s_xj[97].r, xi, fi, atypei + s_xj[97].atype, xmax, xmax1);
+    inter(s_xj[98].r, xi, fi, atypei + s_xj[98].atype, xmax, xmax1);
+    inter(s_xj[99].r, xi, fi, atypei + s_xj[99].atype, xmax, xmax1);
+
+    inter(s_xj[100].r, xi, fi, atypei + s_xj[100].atype, xmax, xmax1);
+    inter(s_xj[101].r, xi, fi, atypei + s_xj[101].atype, xmax, xmax1);
+    inter(s_xj[102].r, xi, fi, atypei + s_xj[102].atype, xmax, xmax1);
+    inter(s_xj[103].r, xi, fi, atypei + s_xj[103].atype, xmax, xmax1);
+    inter(s_xj[104].r, xi, fi, atypei + s_xj[104].atype, xmax, xmax1);
+    inter(s_xj[105].r, xi, fi, atypei + s_xj[105].atype, xmax, xmax1);
+    inter(s_xj[106].r, xi, fi, atypei + s_xj[106].atype, xmax, xmax1);
+    inter(s_xj[107].r, xi, fi, atypei + s_xj[107].atype, xmax, xmax1);
+    inter(s_xj[108].r, xi, fi, atypei + s_xj[108].atype, xmax, xmax1);
+    inter(s_xj[109].r, xi, fi, atypei + s_xj[109].atype, xmax, xmax1);
+
+    inter(s_xj[110].r, xi, fi, atypei + s_xj[110].atype, xmax, xmax1);
+    inter(s_xj[111].r, xi, fi, atypei + s_xj[111].atype, xmax, xmax1);
+    inter(s_xj[112].r, xi, fi, atypei + s_xj[112].atype, xmax, xmax1);
+    inter(s_xj[113].r, xi, fi, atypei + s_xj[113].atype, xmax, xmax1);
+    inter(s_xj[114].r, xi, fi, atypei + s_xj[114].atype, xmax, xmax1);
+    inter(s_xj[115].r, xi, fi, atypei + s_xj[115].atype, xmax, xmax1);
+    inter(s_xj[116].r, xi, fi, atypei + s_xj[116].atype, xmax, xmax1);
+    inter(s_xj[117].r, xi, fi, atypei + s_xj[117].atype, xmax, xmax1);
+    inter(s_xj[118].r, xi, fi, atypei + s_xj[118].atype, xmax, xmax1);
+    inter(s_xj[119].r, xi, fi, atypei + s_xj[119].atype, xmax, xmax1);
+
+    inter(s_xj[120].r, xi, fi, atypei + s_xj[120].atype, xmax, xmax1);
+    inter(s_xj[121].r, xi, fi, atypei + s_xj[121].atype, xmax, xmax1);
+    inter(s_xj[122].r, xi, fi, atypei + s_xj[122].atype, xmax, xmax1);
+    inter(s_xj[123].r, xi, fi, atypei + s_xj[123].atype, xmax, xmax1);
+    inter(s_xj[124].r, xi, fi, atypei + s_xj[124].atype, xmax, xmax1);
+    inter(s_xj[125].r, xi, fi, atypei + s_xj[125].atype, xmax, xmax1);
+    inter(s_xj[126].r, xi, fi, atypei + s_xj[126].atype, xmax, xmax1);
+    inter(s_xj[127].r, xi, fi, atypei + s_xj[127].atype, xmax, xmax1);*/
+    
+
+
   }
 
   if(i<n) for(k=0; k<3; k++) fvec[i*3+k] = fi[k];
