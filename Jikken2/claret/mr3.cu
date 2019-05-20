@@ -174,6 +174,24 @@ void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//デ�
   
 }
 
+extern "C" __global__ 
+void nacl_kernel_gpu_TCPU(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//デバイス側メイン//VG_MATRIX *d_matrix, float xmax, float *fvec)
+{
+  int tid = threadIdx.x;
+  int i = blockIdx.x * NTHRE + tid;
+  int j,k,js,nj;
+  float fi[3],xmax1=1.0f/xmax;
+  int atypei;
+  float xi[3];
+  __shared__ VG_XVEC s_xj[NTHRE];
+
+  for(k=0; k<3; k++) fi[k] = 0.0f;
+
+  if(i<n) for(k=0; k<3; k++) fvec[i*3+k] = fi[k];
+  
+}
+
+
 
 extern "C"
 void MR3calcnacl(double x[], int n, int atype[], int nat,
