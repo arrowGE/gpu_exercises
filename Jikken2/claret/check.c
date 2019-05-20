@@ -202,6 +202,7 @@ int main(int argc, char **argv)
   double ltime, stime;
   double avr, aone, err, eone;
   double favr, fisize, eavr, eisize;
+  double out1,out2;
 
   if (argc != 3 && argc != 4)
   {
@@ -214,14 +215,14 @@ int main(int argc, char **argv)
   
   // set number of particles
   sscanf(argv[1], "%d", &n);
-  printf("Number of particle is %d\n", n);
+  //printf("Number of particle is %d\n", n);
 
   // set number of steps
   if (argc == 4)
   {
     sscanf(argv[3], "%d", &nstep);
   }
-  printf("Number of steps is %d\n", nstep);
+  //printf("Number of steps is %d\n", nstep);
 
   // allocate variables
   if ((x = (double *)malloc(sizeof(double) * n * 3)) == NULL)
@@ -307,13 +308,13 @@ int main(int argc, char **argv)
     {
     case '0':
       MR3calcnacl_CPU(x, n, atype, nat, pol, sigm, ipotro, pc, pd, zz, 0, xmax, 1, a2);
-      if (i == 0)
-        printf("CPU Exp routine is used\n");
+      //if (i == 0)
+        //printf("CPU Exp routine is used\n");
       break;
     case '1':
       MR3calcnacl(x, n, atype, nat, pol, sigm, ipotro, pc, pd, zz, 0, xmax, 1, a2);
-      if (i == 0)
-        printf("GPU routine is used\n");
+      //if (i == 0)
+        //printf("GPU routine is used\n");
       break;
     default:
       fprintf(stderr, "** error : cal_mode=%c is not supported **\n", argv[2][0]);
@@ -324,54 +325,16 @@ int main(int argc, char **argv)
   stime = stime / (double)nstep; //nstepで割って1回分の計算時間を求める
 
   double temp = (double)n;
+  out1 = temp * temp * 78 / stime / 1e9;
   switch (argv[2][0])
   { //計算速度を出力
   case '0':
     //printf("CPU calculation time  = %f [s]\n",stime);
-    printf("CPU calculation speed = %f [Gflops]\n", temp * temp * 78 / stime / 1e9);
+    //printf("CPU calculation speed = %f [Gflops]\n", temp * temp * 78 / stime / 1e9);
     break;
   case '1':
     //printf("GPU calculation time  = %f [s]\n",stime);
-    printf("GPU calculation speed = %f [Gflops]\n", temp * temp * 78 / stime / 1e9);
-    break;
-  default:
-    break;
-  }
-
-  get_cputime(&ltime, &stime); //計測開始
-  // calc with target routine
-  for (i = 0; i < nstep; i++)
-  {
-    switch (argv[2][0])
-    {
-    case '0':
-      MR3calcnacl_correct(x, n, atype, nat, pol, sigm, ipotro, pc, pd, zz, 0, xmax, 1, a2);
-      if (i == 0)
-        printf("CPU original routine is used\n");
-      break;
-    case '1':
-      MR3calcnacl(x, n, atype, nat, pol, sigm, ipotro, pc, pd, zz, 0, xmax, 1, a2);
-      if (i == 0)
-        printf("GPU routine is used\n");
-      break;
-    default:
-      fprintf(stderr, "** error : cal_mode=%c is not supported **\n", argv[2][0]);
-      return 1;
-    }
-  }
-  get_cputime(&ltime, &stime);   //計測終了
-  stime = stime / (double)nstep; //nstepで割って1回分の計算時間を求める
-
-  temp = (double)n;
-  switch (argv[2][0])
-  { //計算速度を出力
-  case '0':
-    //printf("CPU calculation time  = %f [s]\n",stime);
-    printf("CPU correct calculation speed = %f [Gflops]\n", temp * temp * 78 / stime / 1e9);
-    break;
-  case '1':
-    //printf("GPU calculation time  = %f [s]\n",stime);
-    printf("GPU calculation speed = %f [Gflops]\n", temp * temp * 78 / stime / 1e9);
+    //printf("GPU calculation speed = %f [Gflops]\n", temp * temp * 78 / stime / 1e9);
     break;
   default:
     break;
@@ -409,10 +372,13 @@ int main(int argc, char **argv)
     eavr += eisize;
   }
   eavr = eavr / (double)n;
+  out2 = eavr;
   if (argv[2][0] == '1')
   {
-    printf("GPU calculation error = %e\n", eavr);
+    //printf("GPU calculation error = %e\n", eavr);
   }
+  printf("%d %f %e\n",n,out1,out2);
+
   // deallocate variables
   free(x);
   free(a1);

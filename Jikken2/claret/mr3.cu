@@ -7,7 +7,7 @@
 #define CUT_CHECK_ERROR(x) ;
 
 #define NMAX      8192
-#define NTHRE       64  
+#define NTHRE       32  
 #define ATYPE        8
 #define ATYPE2    (ATYPE * ATYPE)
 
@@ -80,14 +80,14 @@ void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//デ�
 
   for (j = 0; j < n; j+=NTHRE)
   {
-    if(j + NTHRE > n)//nがNTHREの倍数以外なら差分だけ計算する
+    /*if(j + NTHRE > n)//nがNTHREの倍数以外なら差分だけ計算する
     {
       nj = n - j;
     }
     else
     {
       nj = NTHRE;
-    }
+    }*/
     __syncthreads();
     s_xj[tid] = x[j+tid];//シェアードメモリを使用
     __syncthreads();
@@ -98,7 +98,7 @@ void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//デ�
     }
     
     //ループアンローリング
-    /*inter(s_xj[0].r, xi, fi, atypei + s_xj[0].atype, xmax, xmax1);
+    inter(s_xj[0].r, xi, fi, atypei + s_xj[0].atype, xmax, xmax1);
     inter(s_xj[1].r, xi, fi, atypei + s_xj[1].atype, xmax, xmax1);
     inter(s_xj[2].r, xi, fi, atypei + s_xj[2].atype, xmax, xmax1);
     inter(s_xj[3].r, xi, fi, atypei + s_xj[3].atype, xmax, xmax1);
@@ -133,7 +133,7 @@ void nacl_kernel_gpu(VG_XVEC *x, int n, int nat, float xmax, float *fvec)//デ�
     
     inter(s_xj[30].r, xi, fi, atypei + s_xj[30].atype, xmax, xmax1);
     inter(s_xj[31].r, xi, fi, atypei + s_xj[31].atype, xmax, xmax1);
-    inter(s_xj[32].r, xi, fi, atypei + s_xj[32].atype, xmax, xmax1);
+    /*inter(s_xj[32].r, xi, fi, atypei + s_xj[32].atype, xmax, xmax1);
     inter(s_xj[33].r, xi, fi, atypei + s_xj[33].atype, xmax, xmax1);
     inter(s_xj[34].r, xi, fi, atypei + s_xj[34].atype, xmax, xmax1);
     inter(s_xj[35].r, xi, fi, atypei + s_xj[35].atype, xmax, xmax1);
