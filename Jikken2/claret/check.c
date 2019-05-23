@@ -145,15 +145,35 @@ void MR3calcnacl_correct(double x[], int n, int atype[], int nat,
       force[i * 3 + k] = fi[k];
   }
 }
-
-void MR3calcnacl_CPU(double x[], int n, int atype[], int nat,
-                     double pol[], double sigm[], double ipotro[],
-                     double pc[], double pd[], double zz[],
+void MR3calcnacl_CPU_address(double x[], int n, int atype[], int nat,
+                     double pol0,double pol1,double pol2,double pol3, 
+                     double sigm0,double sigm1,double sigm2,double sigm3, 
+                     double ipotro0, double ipotro1, double ipotro2, double ipotro3,
+                     double pc0, double pc1, double pc2, double pc3, 
+                     double pd0, double pd1, double pd2, double pd3, 
+                     double zz0, double zz1, double zz2, double zz3,
                      int tblno, double xmax, int periodicflag,
                      double force[])
 {
   int i, j, k, t;
+  int atype1,atype2;
   double xmax1, dn2, r, inr, inr2, inr4, inr8, d3, dr[3], fi[3];
+
+  /*double pol0=pol[0],pol1=pol[1],pol2=pol[2],pol3=pol[3];
+  double sigm0=sigm[0],sigm1=sigm[1],sigm2=sigm[2],sigm3=sigm[3];
+  double ipotro0=ipotro[0],ipotro1=ipotro[1],ipotro2=ipotro[2],ipotro3=ipotro[3];
+  double pc0=pc[0],pc1=pc[1],pc2=pc[2],pc3=pc[3];
+  double pd0=pd[0],pd1=pd[1],pd2=pd[2],pd3=pd[3];
+  double zz0=zz[0],zz1=zz[1],zz2=zz[2],zz3=zz[3];*/
+
+  /*double *pol0=&pol[0],*pol1=&pol[1],*pol2=&pol[2],*pol3=&pol[3];
+  double *sigm0=&sigm[0],*sigm1=&sigm[1],*sigm2=&sigm[2],*sigm3=&sigm[3];
+  double *ipotro0=&ipotro[0],*ipotro1=&ipotro[1],*ipotro2=&ipotro[2],*ipotro3=&ipotro[3];
+  double *pc0=&pc[0],*pc1=&pc[1],*pc2=&pc[2],*pc3=&pc[3];
+  double *pd0=&pd[0],*pd1=&pd[1],*pd2=&pd[2],*pd3=&pd[3];
+  double *zz0=&zz[0],*zz1=&zz[1],*zz2=&zz[2],*zz3=&zz[3];*/
+
+
   double pb = 0.338e-19 / (14.39 * 1.60219e-19), dphir;
   if ((periodicflag & 1) == 0)
     xmax *= 2;
@@ -161,10 +181,12 @@ void MR3calcnacl_CPU(double x[], int n, int atype[], int nat,
 #pragma omp parallel for private(k, j, dn2, dr, r, inr, inr2, inr4, inr8, t, d3, dphir, fi)
   for (i = 0; i < n; i++)
   {
+    //atype1 = atype[i];
     for (k = 0; k < 3; k++)
       fi[k] = 0.0;
     for (j = 0; j < n; j++)
     {
+      //atype2 = atype[j];
       dn2 = 0.0;
       for (k = 0; k < 3; k++)
       {
@@ -179,7 +201,183 @@ void MR3calcnacl_CPU(double x[], int n, int atype[], int nat,
         inr2 = inr * inr;
         inr4 = inr2 * inr2;
         inr8 = inr4 * inr4;
+
+        //t = atype1 * nat + atype2;
+        
+        
+        //d3 = pb * *(pol+t) + Exp((*(sigm+t) * *(ipotro+t)));
+
         t = atype[i] * nat + atype[j];
+
+        switch(t)
+        {
+          case 0:
+          d3 = pb * pol0 * Exp((sigm0 - r) * ipotro0);
+          dphir = (d3 * ipotro0 * inr - 6.0 * pc0 * inr8 - 8.0 * pd0 * inr8 * inr2 + inr2 * inr * zz0);
+          break;
+
+          case 1:
+          d3 = pb * pol1 * Exp((sigm1 - r) * ipotro1);
+          dphir = (d3 * ipotro1 * inr - 6.0 * pc1 * inr8 - 8.0 * pd1 * inr8 * inr2 + inr2 * inr * zz1);
+          break;
+
+          case 2:
+          d3 = pb * pol2 * Exp((sigm2 - r) * ipotro2);
+          dphir = (d3 * ipotro2 * inr - 6.0 * pc2 * inr8 - 8.0 * pd2 * inr8 * inr2 + inr2 * inr * zz2);
+          break;
+
+          case 3:
+          d3 = pb * pol3 * Exp((sigm3 - r) * ipotro3);
+          dphir = (d3 * ipotro3 * inr - 6.0 * pc3 * inr8 - 8.0 * pd3 * inr8 * inr2 + inr2 * inr * zz3);
+          break;
+
+          default:
+          break;
+
+        }
+
+        /*if(t == 0)
+        {
+          dphir = (pb * pol0 * Exp((sigm0 - r) * ipotro0) * ipotro0 * inr - 6.0 * pc0 * inr8 - 8.0 * pd0 * inr8 * inr2 + inr2 * inr * zz0);
+        }
+        else if(t==1)
+        {
+          dphir = (pb * pol1 * Exp((sigm1 - r) * ipotro1) * ipotro1 * inr - 6.0 * pc1 * inr8 - 8.0 * pd1 * inr8 * inr2 + inr2 * inr * zz1);
+        }
+        else if(t==2)
+        {
+          dphir = (pb * pol2 * Exp((sigm2 - r) * ipotro2) * ipotro2 * inr - 6.0 * pc2 * inr8 - 8.0 * pd2 * inr8 * inr2 + inr2 * inr * zz2);
+        }
+        else
+        {
+          dphir = (pb * pol3 * Exp((sigm3 - r) * ipotro3) * ipotro3 * inr - 6.0 * pc3 * inr8 - 8.0 * pd3 * inr8 * inr2 + inr2 * inr * zz3);
+        }*/
+        
+        /*if(t == 0)
+        {
+          d3 = pb * pol0 * Exp((sigm0 - r) * ipotro0);
+          dphir = (d3 * ipotro0 * inr - 6.0 * pc0 * inr8 - 8.0 * pd0 * inr8 * inr2 + inr2 * inr * zz0);
+        }
+        else if(t==1)
+        {
+          d3 = pb * pol1 * Exp((sigm1 - r) * ipotro1);
+          dphir = (d3 * ipotro1 * inr - 6.0 * pc1 * inr8 - 8.0 * pd1 * inr8 * inr2 + inr2 * inr * zz1);
+        }
+        else if(t==2)
+        {
+          d3 = pb * pol2 * Exp((sigm2 - r) * ipotro2);
+          dphir = (d3 * ipotro2 * inr - 6.0 * pc2 * inr8 - 8.0 * pd2 * inr8 * inr2 + inr2 * inr * zz2);
+        }
+        else
+        {
+          d3 = pb * pol3 * Exp((sigm3 - r) * ipotro3);
+          dphir = (d3 * ipotro3 * inr - 6.0 * pc3 * inr8 - 8.0 * pd3 * inr8 * inr2 + inr2 * inr * zz3);
+        }*/
+
+        /*if(t == 0)
+        {
+          d3 = pb * *pol0 * Exp((*sigm0 - r) * *ipotro0);
+          dphir = (d3 * *ipotro0 * inr - 6.0 * *pc0 * inr8 - 8.0 * *pd0 * inr8 * inr2 + inr2 * inr * *zz0);
+        }
+        else if(t==1)
+        {
+          d3 = pb * *pol1 * Exp((*sigm1 - r) * *ipotro1);
+          dphir = (d3 * *ipotro1 * inr - 6.0 * *pc1 * inr8 - 8.0 * *pd1 * inr8 * inr2 + inr2 * inr * *zz1);
+        }
+        else if(t==2)
+        {
+          d3 = pb * *pol2 * Exp((*sigm2 - r) * *ipotro2);
+          dphir = (d3 * *ipotro2 * inr - 6.0 * *pc2 * inr8 - 8.0 * *pd2 * inr8 * inr2 + inr2 * inr * *zz2);
+        }
+        else
+        {
+          d3 = pb * *pol3 * Exp((*sigm3 - r) * *ipotro3);
+          dphir = (d3 * *ipotro3 * inr - 6.0 * *pc3 * inr8 - 8.0 * *pd3 * inr8 * inr2 + inr2 * inr * *zz3);
+        }*/
+
+        /*switch(t)
+        {
+          case 0:
+          d3 = pb * *(pol+0) * Exp((*(sigm+0) - r) * *(ipotro+0));
+          dphir = (d3 * *(ipotro+0) * inr - 6.0 * *(pc+0) * inr8 - 8.0 * *(pd+0) * inr8 * inr2 + inr2 * inr * *(zz+0));
+          break;
+
+          case 1:
+          d3 = pb * *(pol+1) * Exp((*(sigm+1) - r) * *(ipotro+1));
+          dphir = (d3 * *(ipotro+1) * inr - 6.0 * *(pc+1) * inr8 - 8.0 * *(pd+1) * inr8 * inr2 + inr2 * inr * *(zz+1));
+          break;
+
+          case 2:
+          d3 = pb * *(pol+2) * Exp((*(sigm+2) - r) * *(ipotro+2));
+          dphir = (d3 * *(ipotro+2) * inr - 6.0 * *(pc+2) * inr8 - 8.0 * *(pd+2) * inr8 * inr2 + inr2 * inr * *(zz+2));
+          break;
+
+          case 3:
+          d3 = pb * *(pol+3) * Exp((*(sigm+3) - r) * *(ipotro+3));
+          dphir = (d3 * *(ipotro+3) * inr - 6.0 * *(pc+3) * inr8 - 8.0 * *(pd+3) * inr8 * inr2 + inr2 * inr * *(zz+3));
+          break;
+
+          default:
+          break;
+
+        }*/
+        
+        
+        
+        
+        for (k = 0; k < 3; k++)
+          fi[k] += dphir * dr[k];
+      }
+    }
+    for (k = 0; k < 3; k++)
+      force[i * 3 + k] = fi[k];
+  }
+}
+void MR3calcnacl_CPU(double x[], int n, int atype[], int nat,
+                     double pol[], double sigm[], double ipotro[],
+                     double pc[], double pd[], double zz[],
+                     int tblno, double xmax, int periodicflag,
+                     double force[])
+{
+  int i, j, k, t;
+  int atype1,atype2;
+  double xmax1, dn2, r, inr, inr2, inr4, inr8, d3, dr[3], fi[3];
+
+  double pb = 0.338e-19 / (14.39 * 1.60219e-19), dphir;
+  if ((periodicflag & 1) == 0)
+    xmax *= 2;
+  xmax1 = 1.0 / xmax;
+#pragma omp parallel for private(k, j, dn2, dr, r, inr, inr2, inr4, inr8, t, d3, dphir, fi)
+  for (i = 0; i < n; i++)
+  {
+    //atype1 = atype[i];
+    for (k = 0; k < 3; k++)
+      fi[k] = 0.0;
+    for (j = 0; j < n; j++)
+    {
+      //atype2 = atype[j];
+      dn2 = 0.0;
+      for (k = 0; k < 3; k++)
+      {
+        dr[k] = x[i * 3 + k] - x[j * 3 + k];
+        dr[k] -= rint(dr[k] * xmax1) * xmax;
+        dn2 += dr[k] * dr[k];
+      }
+      if (dn2 != 0.0)
+      {
+        r = sqrt(dn2);
+        inr = 1.0 / r;
+        inr2 = inr * inr;
+        inr4 = inr2 * inr2;
+        inr8 = inr4 * inr4;
+
+        //t = atype1 * nat + atype2;
+        
+        
+        //d3 = pb * *(pol+t) + Exp((*(sigm+t) * *(ipotro+t)));
+
+        t = atype[i] * nat + atype[j];
+
         d3 = pb * pol[t] * Exp((sigm[t] - r) * ipotro[t]);
         dphir = (d3 * ipotro[t] * inr - 6.0 * pc[t] * inr8 - 8.0 * pd[t] * inr8 * inr2 + inr2 * inr * zz[t]);
         for (k = 0; k < 3; k++)
@@ -294,6 +492,13 @@ int main(int argc, char **argv)
     }
   }
 
+  double pol0=pol[0],pol1=pol[1],pol2=pol[2],pol3=pol[3];
+  double sigm0=sigm[0],sigm1=sigm[1],sigm2=sigm[2],sigm3=sigm[3];
+  double ipotro0=ipotro[0],ipotro1=ipotro[1],ipotro2=ipotro[2],ipotro3=ipotro[3];
+  double pc0=pc[0],pc1=pc[1],pc2=pc[2],pc3=pc[3];
+  double pd0=pd[0],pd1=pd[1],pd2=pd[2],pd3=pd[3];
+  double zz0=zz[0],zz1=zz[1],zz2=zz[2],zz3=zz[3];
+
   // calculation stars from here
   if (argv[2][0] == '1')
   {
@@ -308,6 +513,8 @@ int main(int argc, char **argv)
     {
     case '0':
       MR3calcnacl_CPU(x, n, atype, nat, pol, sigm, ipotro, pc, pd, zz, 0, xmax, 1, a2);
+      
+
       if (i == 0)
         printf("CPU Exp routine is used\n");
       break;
@@ -316,6 +523,21 @@ int main(int argc, char **argv)
       if (i == 0)
         printf("GPU routine is used\n");
       break;
+    
+    case '2':
+      MR3calcnacl_CPU_address(x, n, atype, nat, 
+        pol0, pol1, pol2, pol3, 
+        sigm0, sigm1, sigm2, sigm3, 
+        ipotro0, ipotro1, ipotro2, ipotro3, 
+        pc0, pc1, pc2, pc3, 
+        pd0, pd1, pd2, pd3,
+        zz0, zz1, zz2, zz3, 
+        0, xmax, 1, a2);
+        
+      if (i == 0)
+        printf("CPU address routine is used\n");
+
+        break;
     default:
       fprintf(stderr, "** error : cal_mode=%c is not supported **\n", argv[2][0]);
       return 1;
@@ -335,6 +557,10 @@ int main(int argc, char **argv)
     //printf("GPU calculation time  = %f [s]\n",stime);
     printf("GPU calculation speed = %f [Gflops]\n", temp * temp * 78 / stime / 1e9);
     break;
+  case '2':
+    //printf("GPU calculation time  = %f [s]\n",stime);
+    printf("CPU address calculation speed = %f [Gflops]\n", temp * temp * 78 / stime / 1e9);
+    break;
   default:
     break;
   }
@@ -346,6 +572,7 @@ int main(int argc, char **argv)
     switch (argv[2][0])
     {
     case '0':
+    case '2':
       MR3calcnacl_correct(x, n, atype, nat, pol, sigm, ipotro, pc, pd, zz, 0, xmax, 1, a1);
       if (i == 0)
         printf("CPU original routine is used\n");
@@ -367,6 +594,7 @@ int main(int argc, char **argv)
   switch (argv[2][0])
   { //計算速度を出力
   case '0':
+  case '2':
     //printf("CPU calculation time  = %f [s]\n",stime);
     printf("CPU correct calculation speed = %f [Gflops]\n", temp * temp * 78 / stime / 1e9);
     break;
